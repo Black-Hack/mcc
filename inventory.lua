@@ -64,12 +64,22 @@ local function storeBuffer()
     end
 end
 
+local function listInventory()
+    for itemstr, count in pairs(inventory) do
+        local itemTable = textutils.unserialise(itemstr)
+        print(("%s  %d"):format(itemTable.displayName, count))
+    end
+end
+
 local function invShell()
     while true do
         io.write("inv>>")
         local command = read()
         if command == "store" then
             storeBuffer()
+        end
+        if command == "list" then
+            listInventory()
         end
         if command == "exit" then
             break
