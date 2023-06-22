@@ -69,8 +69,8 @@ local function storeBuffer()
                 count = count - pushedcount
             end
         end
-        if  items[itemstr] then
-            items[itemstr] =  items[itemstr] - count
+        if  Inventory[itemstr] then
+            Inventory[itemstr] =  Inventory[itemstr] - count
         end
     end
 end
