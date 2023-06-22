@@ -184,6 +184,9 @@ function searchWindow.onclick(mouseButton, posX, posY)
 
     if posX < width - 2 then
         local oldterm = term.redirect(searchWindow)
+        searchWindow.myText = ""
+        searchWindow.draw()
+        searchWindow.setCursorPos(1, 2)
         searchWindow.myText = read()
         term.redirect(oldterm)
     else
