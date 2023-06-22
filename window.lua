@@ -255,6 +255,7 @@ function contentWindow.prevButton.onclick(mouseButton, posX, posY)
     if contentWindow.currentPage > 1 then
         contentWindow.currentPage = contentWindow.currentPage - 1
     end
+    searchWindow.myText = "page " .. tostring(contentWindow.currentPage)
     contentWindow.draw()
 end 
 --nextButton increments currentPage onclick
