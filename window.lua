@@ -256,11 +256,13 @@ function contentWindow.prevButton.onclick(mouseButton, posX, posY)
     if contentWindow.currentPage > 1 then
         contentWindow.currentPage = contentWindow.currentPage - 1
     end
+    contentWindow.draw()
 end 
 --nextButton increments currentPage onclick
 function contentWindow.nextButton.onclick(mouseButton, posX, posY)
     contentWindow.currentPage = contentWindow.currentPage + 1
-    
+
+    contentWindow.draw()
 end
 --create the placeholders
 for i = 0, 8 do
@@ -273,15 +275,15 @@ end
 function contentWindow.draw()
     local posX, posY = contentWindow.getPosition()
     contentWindow.clear()
-    --draw placeholders
-    for i =1, #contentWindow.placeholders do
-        contentWindow.placeholders[i].draw()
-    end
     --draw prev,next Buttons
     contentWindow.prevButton.clear()
     contentWindow.prevButton.write("<<")
     contentWindow.nextButton.clear()
     contentWindow.nextButton.write(">>")
+    --draw placeholders
+    for i =1, #contentWindow.placeholders do
+        contentWindow.placeholders[i].draw()
+    end
     --draw currentPage
     contentWindow.setCursorPos(math.floor(contentWindow.myWidth /2) - 3, contentWindow.myHeight)
     contentWindow.write(("Page %d"):format(contentWindow.currentPage))
