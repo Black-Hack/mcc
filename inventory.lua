@@ -1,21 +1,22 @@
 Item = require "lib.item"
 local arg = {...}
-local buffer_chest
+local bufferChestName
+
 if #arg ~= 1 then
     print("inventory [buffer_chest]")
     return
 else
-    buffer_chest = arg[1]
-    local chest = peripheral.wrap(buffer_chest)
-    if not chest or not peripheral.hasType(buffer_chest, "inventory") then
+    bufferChestName = arg[1]
+    local chest = peripheral.wrap(bufferChestName)
+    if not chest or not peripheral.hasType(bufferChestName, "inventory") then
         print("peripheral has to be of type inventory")
         return
     end
 end
-
+local bufferChest = peripheral.wrap(bufferChestName)
 local chest_names = {}
 for i, name in ipairs(peripheral.getNames()) do
-    if peripheral.hasType(name, "inventory") and name ~= buffer_chest then
+    if peripheral.hasType(name, "inventory") and name ~= bufferChestName then
         table.insert(chest_names, name)
     end
 end
@@ -48,9 +49,8 @@ Monitor = peripheral.find("monitor")
 
 
 local function storeBuffer()
-    local chest = peripheral.wrap(buffer_chest)
-    for slot,item in pairs(chest.list()) do
-        local itemDetail = chest.getItemDetail(slot)
+    for slot,item in pairs(bufferChest.list()) do
+        local itemDetail = bufferChest.getItemDetail(slot)
         itemDetail.count = nil
         local itemstr = textutils.serialise(itemDetail)
         local count = item.count
@@ -65,7 +65,7 @@ local function storeBuffer()
             end
             local pushedcount = 1
             while pushedcount ~= 0 do
-                pushedcount = chest.pushItems(name, slot)
+                pushedcount = bufferChest.pushItems(name, slot)
                 count = count - pushedcount
             end
         end
@@ -74,7 +74,41 @@ local function storeBuffer()
         end
     end
 end
+local function getItemStrFromName(itemName)
+    for itemstr,_ in pairs(Inventory) do
+        local itemTable = textutils.unserialise(itemstr)
+        if itemTable.displayName == itemName then return itemstr end;
+    end
+    return nil
+end
+local function getItemStrFromSlot(chest, slot)
+    local itemDetail = chest.getItemDetail(slot)
+    itemDetail.count = nil
+    return textutils.serialise(itemDetail)
+end
 
+local function fetchfromInventory(itemName, itemCount)
+    local itemstr = getItemStrFromName(itemName)
+    if not itemstr then
+        print("item was not found")
+        return
+    end
+    local i = 1
+    while i <= #chest_names and itemCount > 0 do
+        local chest = peripheral.wrap(chest_names[i])
+        for slot,_ in pairs(chest.list()) do
+            local currentItemstr = getItemStrFromSlot(chest, slot)
+            local itemTable = textutils.unserialise(currentItemstr)
+            if itemTable.displayName == itemName then
+                local pulledCount = bufferChest.pulledItems(chest_names[i], slot, itemCount)
+                itemCount = itemCount - pulledCount
+                Inventory[itemstr] = Inventory[itemstr] - pulledCount
+            end
+
+        end
+        i = i + 1
+    end
+end
 local function listInventory()
     for itemstr, count in pairs(Inventory) do
         local itemTable = textutils.unserialise(itemstr)
@@ -94,6 +128,17 @@ local function invShell()
         end
         if command == "update" then
             Inventory = scan_chests()
+        end
+        if command == "fetch" then
+            write("Item Name: ")
+            local itemName = read()
+            write("Count: ")
+            local itemCount = tonumber(read())
+            if not itemCount or not itemCount then
+                print("enter valid input")
+            else
+                fetchfromInventory(itemName, itemCount)
+            end
         end
         if command == "exit" then
             break
