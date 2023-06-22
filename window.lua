@@ -177,7 +177,6 @@ function searchWindow.draw()
     searchWindow.setCursorPos(width - 2, 2)
     searchWindow.write("XX")
     searchWindow.setCursorPos(1,2)
-    searchWindow.setCursorBlink(true)
 end
 
 --handles click on searchWindow.
