@@ -256,11 +256,14 @@ function contentWindow.prevButton.onclick(mouseButton, posX, posY)
         contentWindow.currentPage = contentWindow.currentPage - 1
     end
     searchWindow.myText = "page " .. tostring(contentWindow.currentPage)
+    searchWindow.draw()
     contentWindow.draw()
 end 
 --nextButton increments currentPage onclick
 function contentWindow.nextButton.onclick(mouseButton, posX, posY)
     contentWindow.currentPage = contentWindow.currentPage + 1
+    searchWindow.myText = "page " .. tostring(contentWindow.currentPage)
+    searchWindow.draw()
     contentWindow.draw()
 end
 --create the placeholders
