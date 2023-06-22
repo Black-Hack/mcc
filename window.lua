@@ -161,9 +161,7 @@ end
 local screenWidth, screenHeight = term.getSize()
 local root = term.current()
 local searchWindow = window.create(root,1, 1, screenWidth, 2)
-
 searchWindow.setBackgroundColor(colors.red)
-searchWindow.clear()
 searchWindow.myText = "hello"
 
 --draws myText: the typed so far
@@ -176,7 +174,6 @@ function searchWindow.draw()
     searchWindow.write(searchWindow.myText)
     searchWindow.setCursorPos(width - 2, 2)
     searchWindow.write("XX")
-    searchWindow.setCursorPos(1,2)
 end
 
 --handles click on searchWindow.
@@ -206,7 +203,6 @@ end
 --placeholder has myItemstr, myDisplayName, myCount
 local contentWindow = window.create(root, 1, 3, screenWidth, screenHeight - 2)
 contentWindow.setBackgroundColor(colors.blue)
-contentWindow.clear()
 local w,h = contentWindow.getSize()
 contentWindow.myWidth = w
 contentWindow.myHeight = h 
@@ -261,7 +257,6 @@ end
 --nextButton increments currentPage onclick
 function contentWindow.nextButton.onclick(mouseButton, posX, posY)
     contentWindow.currentPage = contentWindow.currentPage + 1
-
     contentWindow.draw()
 end
 --create the placeholders
@@ -273,7 +268,6 @@ for i = 0, 8 do
 end
 
 function contentWindow.draw()
-    local posX, posY = contentWindow.getPosition()
     contentWindow.clear()
     --draw prev,next Buttons
     contentWindow.prevButton.clear()
@@ -285,7 +279,7 @@ function contentWindow.draw()
         contentWindow.placeholders[i].draw()
     end
     --draw currentPage
-    contentWindow.setCursorPos(math.floor(contentWindow.myWidth /2) - 3, contentWindow.myHeight)
+    contentWindow.setCursorPos(math.floor(contentWindow.myWidth / 2) - 3, contentWindow.myHeight)
     contentWindow.write(("Page %d"):format(contentWindow.currentPage))
 end
 
@@ -294,11 +288,12 @@ function contentWindow.onclick(mouseButton, posX, posY)
     local x, y = contentWindow.prevButton.getPosition()
     local w, h = contentWindow.prevButton.getSize()
     if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
+        print("hlelo therer ")
         contentWindow.prevButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
     --check if nextButton is clicked
-    local x, y = contentWindow.nextButton.getPosition()
-    local w, h = contentWindow.nextButton.getSize()
+    x, y = contentWindow.nextButton.getPosition()
+    w, h = contentWindow.nextButton.getSize()
     if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
         contentWindow.nextButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
