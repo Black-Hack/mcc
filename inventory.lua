@@ -1,4 +1,3 @@
-Item = require "lib.item"
 local arg = {...}
 local bufferChestName
 
