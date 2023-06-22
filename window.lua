@@ -278,7 +278,9 @@ function contentWindow.draw()
         contentWindow.placeholders[i].draw()
     end
     --draw prev,next Buttons
+    contentWindow.prevButton.clear()
     contentWindow.prevButton.write("<<")
+    contentWindow.nextButton.clear()
     contentWindow.nextButton.write(">>")
     --draw currentPage
     contentWindow.setCursorPos(math.floor(contentWindow.myWidth /2) - 3, contentWindow.myHeight)
@@ -330,8 +332,8 @@ function root.onclick(mouseButton, posX, posY)
 end
 
 while true do
-    contentWindow.draw()
     searchWindow.draw()
+    contentWindow.draw()
     ---@diagnostic disable-next-line: undefined-field
     local _, mouseButton, posX, posY = os.pullEvent("mouse_click")
     root.onclick(mouseButton, posX, posY)
