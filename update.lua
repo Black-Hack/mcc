@@ -1,4 +1,4 @@
-local URL_PREFIX = 'https://raw.githubusercontent.com/bieno12/mcc/master/'
+local URL_PREFIX = 'https://raw.githubusercontent.com/Black-Hack/mcc/master/'
 local DIR_PREFIX = '/mcc/'
 
 function entry(name)
@@ -19,7 +19,7 @@ parallel.waitForAll(
     entry('sortchest.lua'),
     entry('lib/sortchest.lua'),
     entry('LICENSE.md'),
-    entry('lib/item.lua'),
+
     entry('lib/traverse.lua'),
     entry('inventory.lua')
 
