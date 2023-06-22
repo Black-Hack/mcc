@@ -19,7 +19,7 @@ for i, name in ipairs(peripheral.getNames()) do
         table.insert(chest_names, name)
     end
 end
-local inventory = {}
+Inventory = {}
 
 
 local function scan_chests()
@@ -43,14 +43,22 @@ local function scan_chests()
     end
     return items
 end
-inventory = scan_chests()
+Inventory = scan_chests()
 Monitor = peripheral.find("monitor")
 
 
 local function storeBuffer()
     local chest = peripheral.wrap(buffer_chest)
-    for slot,itemDetail in pairs(chest.list()) do
-        local count = itemDetail.count
+    for slot,item in pairs(chest.list()) do
+        local itemDetail = chest.getItemDetail(slot)
+        itemDetail.count = nil
+        local itemstr = textutils.serialise(itemDetail)
+        local count = item.count
+        if not items[itemstr] then
+            items[itemstr] = item.count
+        else
+            items[itemstr] =  items[itemstr] + item.count
+        end
         for _, name  in pairs(chest_names) do
             if count <= 0 then
                 break
@@ -61,11 +69,14 @@ local function storeBuffer()
                 count = count - pushedcount
             end
         end
+        if  items[itemstr] then
+            items[itemstr] =  items[itemstr] - count
+        end
     end
 end
 
 local function listInventory()
-    for itemstr, count in pairs(inventory) do
+    for itemstr, count in pairs(Inventory) do
         local itemTable = textutils.unserialise(itemstr)
         print(("%s  %d"):format(itemTable.displayName, count))
     end
@@ -80,6 +91,9 @@ local function invShell()
         end
         if command == "list" then
             listInventory()
+        end
+        if command == "update" then
+            Inventory = scan_chests()
         end
         if command == "exit" then
             break
