@@ -1,7 +1,19 @@
 Item = require "lib.item"
+local arg = {...}
+local buffer_chest
+if #arg ~= 1 then
+    print("inventory [buffer_chest]")
+    return
+else
+    buffer_chest = arg[1]
+    local chest = peripheral.wrap(buffer_chest)
+    if not chest or not peripheral.hasType(buffer_chest, "inventory") then
+        print("peripheral has to be of type inventory")
+        return
+    end
+end
 
 local chest_names = {}
-local buffer_chest = "minecraft:chest_11"
 for i, name in ipairs(peripheral.getNames()) do
     if peripheral.hasType(name, "inventory") and name ~= buffer_chest then
         table.insert(chest_names, name)
