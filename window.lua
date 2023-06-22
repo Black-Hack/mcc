@@ -171,6 +171,7 @@ searchWindow.myText = "hello"
 function searchWindow.draw()
     local posX, posY = searchWindow.getPosition()
     local width, height = searchWindow.getSize()
+    searchWindow.clear()
     searchWindow.setCursorPos(1,2)
     searchWindow.write(searchWindow.myText)
     searchWindow.setCursorPos(width - 2, 2)
