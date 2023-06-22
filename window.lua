@@ -51,6 +51,7 @@ local function scan_chests()
     end
     return items
 end
+
 Inventory = scan_chests()
 
 --stores all item in bufferChest to connected chests
@@ -237,7 +238,9 @@ local function create_placeholder(posX, posY)
         placeholder.setCursorPos(placeholder.myWidth - 4, placeholder.myHeight)
         placeholder.write(placeholder.myCount)            
     end
-    
+    function placeholder.onclick(mouseButton, posX, posY)
+        --todo stuff
+    end
     return placeholder
 end
 --create two buttons (windows)
@@ -249,13 +252,13 @@ contentWindow.nextButton.setBackgroundColor(colors.red)
 --currentPage is number indicating which set of items should be displayed to placeholders
 contentWindow.currentPage = 1
 --prevButton decrements currentPage onclick
-function contentWindow.prevButton.onclick()
+function contentWindow.prevButton.onclick(mouseButton, posX, posY)
     if contentWindow.currentPage > 1 then
         contentWindow.currentPage = contentWindow.currentPage - 1
     end
 end 
 --nextButton increments currentPage onclick
-function contentWindow.nextButton.onclick()
+function contentWindow.nextButton.onclick(mouseButton, posX, posY)
     contentWindow.currentPage = contentWindow.currentPage + 1
     
 end
@@ -264,7 +267,7 @@ for i = 0, 8 do
     local posX = math.floor(i / 3) * contentWindow.myphWidth + math.floor(i/3) + 1
     local posY = ((i) % 3) * ((contentWindow.myHeight) / 3) + 2
     local placeholder = create_placeholder(posX, posY)
-    table.insert(contentWindow.placeholders, placeholder) 
+    table.insert(contentWindow.placeholders, placeholder)
 end
 
 function contentWindow.draw()
@@ -277,8 +280,59 @@ function contentWindow.draw()
     --draw prev,next Buttons
     contentWindow.prevButton.write("<<")
     contentWindow.nextButton.write(">>")
+    --draw currentPage
+    contentWindow.setCursorPos(math.floor(contentWindow.myWidth /2) - 3, contentWindow.myHeight)
+    contentWindow.write(("Page %d"):format(contentWindow.currentPage))
+end
+
+function contentWindow.onclick(mouseButton, posX, posY)
+    --check if prevButton is clicked
+    local x, y = contentWindow.prevButton.getPosition()
+    local w, h = contentWindow.prevButton.getSize()
+    if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
+        contentWindow.prevButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
+    end
+    --check if nextButton is clicked
+    local x, y = contentWindow.nextButton.getPosition()
+    local w, h = contentWindow.nextButton.getSize()
+    if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
+        contentWindow.nextButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
+    end
+    --check placeholders
+    for i = 1, #contentWindow.placeholders do
+        local ph = contentWindow.placeholders[i];
+        x, y = ph.getPosition()
+        w, h = ph.getSize()
+        if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
+            ph.onclick(mouseButton, posX - x + 1, posY - y + 1)
+        end
+    end
 end
 
 
-contentWindow.draw()
-searchWindow.draw()
+
+
+--handles general mouse clicks
+--redirects the event to clicked windows with posX , posY relative the the window itself
+function root.onclick(mouseButton, posX, posY)
+    --check the searchWindow
+    local x, y = searchWindow.getPosition()
+    local w, h = searchWindow.getSize()
+    if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
+        searchWindow.onclick(mouseButton, posX - x + 1, posY - y + 1)
+    end
+    --check the contentWindow
+    x, y = contentWindow.getPosition()
+    w, h = contentWindow.getSize()
+    if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
+        contentWindow.onclick(mouseButton, posX - x + 1, posY - y + 1)
+    end
+end
+
+while true do
+    contentWindow.draw()
+    searchWindow.draw()
+    ---@diagnostic disable-next-line: undefined-field
+    local _, mouseButton, posX, posY = os.pullEvent("mouse_click")
+    root.onclick(mouseButton, posX, posY)
+end
