@@ -54,10 +54,10 @@ local function storeBuffer()
         itemDetail.count = nil
         local itemstr = textutils.serialise(itemDetail)
         local count = item.count
-        if not items[itemstr] then
-            items[itemstr] = item.count
+        if not Inventory[itemstr] then
+            Inventory[itemstr] = item.count
         else
-            items[itemstr] =  items[itemstr] + item.count
+            Inventory[itemstr] =  Inventory[itemstr] + item.count
         end
         for _, name  in pairs(chest_names) do
             if count <= 0 then
