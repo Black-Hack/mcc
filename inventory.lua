@@ -100,7 +100,7 @@ local function fetchfromInventory(itemName, itemCount)
             local currentItemstr = getItemStrFromSlot(chest, slot)
             local itemTable = textutils.unserialise(currentItemstr)
             if itemTable.displayName == itemName then
-                local pulledCount = bufferChest.pulledItems(chest_names[i], slot, itemCount)
+                local pulledCount = bufferChest.pullItems(chest_names[i], slot, itemCount)
                 itemCount = itemCount - pulledCount
                 Inventory[itemstr] = Inventory[itemstr] - pulledCount
             end
