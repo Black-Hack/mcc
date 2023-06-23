@@ -291,6 +291,8 @@ function contentWindow.draw()
 end
 
 function contentWindow.onclick(mouseButton, posX, posY)
+    searchWindow.myText = tostring(posX) .. ", " .. tostring(posY)
+    searchWindow.draw()
     --check if prevButton is clicked
     local x, y = contentWindow.prevButton.getPosition()
     local w, h = contentWindow.prevButton.getSize()
@@ -320,8 +322,6 @@ end
 --handles general mouse clicks
 --redirects the event to clicked windows with posX , posY relative the the window itself
 function root.onclick(mouseButton, posX, posY)
-    searchWindow.myText = tostring(posX) .. ", " .. tostring(pos)
-    searchWindow.draw()
     --check the searchWindow
     local x, y = searchWindow.getPosition()
     local w, h = searchWindow.getSize()
