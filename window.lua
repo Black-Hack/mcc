@@ -157,17 +157,12 @@ local function invShell()
         end
     end        
 end
-local logger = fs.open("log", "w")
 
 local function searchInventoryByName(itemName)
     local result = {}
     for itemstr, count in pairs(Inventory) do
         local itemTable = textutils.unserialise(itemstr)
-        logger.write(string.upper(itemTable.displayName))
-        logger.write(", ")
-        logger.write(string.upper(itemName))
-        logger.write("\n")
-        logger.flush()
+
         if string.find(string.upper(itemTable.displayName), string.upper(itemName)) then
             table.insert(result, itemstr)
         end
