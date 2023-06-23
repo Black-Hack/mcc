@@ -34,7 +34,6 @@ local function scan_chests()
     local items = {}
     for i, name in ipairs(chest_names) do
         local chest = peripheral.wrap(name)
-        print(peripheral.getName(chest))
         for slot, item in pairs(chest.list()) do
         
             local itemDetail = chest.getItemDetail(slot)
@@ -80,6 +79,7 @@ local function storeBuffer()
             Inventory[itemstr] =  Inventory[itemstr] - count
         end
     end
+    Inventory = scan_chests()
 end
 
 local function getItemStrFromName(itemName)
