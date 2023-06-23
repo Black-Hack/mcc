@@ -243,7 +243,7 @@ local function fetchByItemStr(itemstr, itemCount)
         i = i + 1
     end
     if Inventory[itemstr] == 0 then
-        table.remove(Inventory, itemstr)
+        Inventory[itemstr] = nil
         contentWindow.mySearchText = nil
     end
 end
