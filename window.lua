@@ -320,11 +320,13 @@ function contentWindow.fillPlaceholders()
 
     contentWindow.myItemstrs = searchInventoryByName(searchWindow.myText);
     local itemstrs =  contentWindow.myItemstrs
+    contentWindow.currentPage = math.min(contentWindow.currentPage, math.ceil(#itemstrs / 9))
+    local page = contentWindow.currentPage
     local i = 1
-    while i <= #itemstrs and i <= #contentWindow.placeholders do
+    while i + (page - 1) * 9 <= #itemstrs and i <= #contentWindow.placeholders do
         local ph = contentWindow.placeholders[i];
         ph.setVisible(true)
-        ph.myItemstr= itemstrs[i]
+        ph.myItemstr= itemstrs[i + (page - 1) * 9]
         local itemTable = textutils.unserialise(ph.myItemstr)
         ph.myDisplayName = itemTable.displayName
         i = i + 1
