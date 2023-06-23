@@ -296,13 +296,13 @@ function contentWindow.onclick(mouseButton, posX, posY)
     --check if prevButton is clicked
     local x, y = contentWindow.prevButton.getPosition()
     local w, h = contentWindow.prevButton.getSize()
-    if (x <= posX and posX < w - x) and (y <= posY and posY < h - y) then
+    if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
         contentWindow.prevButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
     --check if nextButton is clicked
     x, y = contentWindow.nextButton.getPosition()
     w, h = contentWindow.nextButton.getSize()
-    if (x <= posX and posX < w - x) and (y <= posY and posY < h - y) then
+    if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
         contentWindow.nextButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
     --check placeholders
@@ -310,7 +310,7 @@ function contentWindow.onclick(mouseButton, posX, posY)
         local ph = contentWindow.placeholders[i];
         x, y = ph.getPosition()
         w, h = ph.getSize()
-        if (x <= posX and posX < w - x) and (y <= posY and posY < h - y) then
+        if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
             ph.onclick(mouseButton, posX - x + 1, posY - y + 1)
         end
     end
@@ -325,13 +325,13 @@ function root.onclick(mouseButton, posX, posY)
     --check the searchWindow
     local x, y = searchWindow.getPosition()
     local w, h = searchWindow.getSize()
-    if (x <= posX and posX < w - x) and (y <= posY and posY < h - y) then
+    if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
         searchWindow.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
     --check the contentWindow
     x, y = contentWindow.getPosition()
     w, h = contentWindow.myWidth, contentWindow.myHeight
-    if (x <= posX and posX < w - x) and (y <= posY and posY < h - y) then
+    if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
         contentWindow.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
 end
