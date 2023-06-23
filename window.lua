@@ -291,6 +291,8 @@ function contentWindow.draw()
 end
 
 function contentWindow.onclick(mouseButton, posX, posY)
+    searchWindow.myText = "never the lessss"
+    searchWindow.draw()
     --check if prevButton is clicked
     local x, y = contentWindow.prevButton.getPosition()
     local w, h = contentWindow.prevButton.getSize()
@@ -329,7 +331,7 @@ function root.onclick(mouseButton, posX, posY)
     end
     --check the contentWindow
     x, y = contentWindow.getPosition()
-    w, h = contentWindow.getSize()
+    w, h = contentWindow.myWidth, contentWindow.myHeight
     if (x <= posX and posX <= w) and (y <= posY and posY <= h) then
         contentWindow.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
