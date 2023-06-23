@@ -287,6 +287,8 @@ contentWindow.prevButton = window.create(contentWindow, 1, contentWindow.myHeigh
 contentWindow.nextButton = window.create(contentWindow, contentWindow.myWidth - 2, contentWindow.myHeight, 2, 1)
 contentWindow.prevButton.setBackgroundColor(colors.red)
 contentWindow.nextButton.setBackgroundColor(colors.red)
+contentWindow.storeButton = window.create(contentWindow, 4, contentWindow.myHeight, 5, 1)
+contentWindow.storeButton.setBackgroundColor(colors.green)
 --currentPage is number indicating which set of items should be displayed to placeholders
 contentWindow.currentPage = 1
 --prevButton decrements currentPage onclick
@@ -294,6 +296,10 @@ function contentWindow.prevButton.onclick(mouseButton, posX, posY)
     if contentWindow.currentPage > 1 then
         contentWindow.currentPage = contentWindow.currentPage - 1
     end
+    contentWindow.draw()
+end
+function contentWindow.storeButton.onclick(mouseButton, posX, posY)
+    if mouseButton == 1 then storeBuffer() end
     contentWindow.draw()
 end 
 --nextButton increments currentPage onclick
@@ -338,6 +344,9 @@ function contentWindow.draw()
     contentWindow.prevButton.write("<<")
     contentWindow.nextButton.clear()
     contentWindow.nextButton.write(">>")
+    --draw storeButton
+    contentWindow.storeButton.clear()
+    contentWindow.storeButton.write("store")
     --draw placeholders
     for i =1, #contentWindow.placeholders do
         contentWindow.placeholders[i].draw()
