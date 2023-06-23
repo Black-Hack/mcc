@@ -157,11 +157,16 @@ local function invShell()
         end
     end        
 end
+local logger = io.open("log", "w")
 
 local function searchInventoryByName(itemName)
     local result = {}
     for itemstr, count in pairs(Inventory) do
         local itemTable = textutils.unserialise(itemstr)
+        logger.write(string.upper(itemTable.displayName))
+        logger.write(", ")
+        logger.write(string.upper(itemName))
+        logger.write("\n")
         if string.find(string.upper(itemTable.displayName), string.upper(itemName)) then
             table.insert(result, itemstr)
         end
@@ -320,7 +325,7 @@ function contentWindow.fillPlaceholders()
     contentWindow.myItemstrs = searchInventoryByName(searchWindow.myText);
     local itemstrs =  contentWindow.myItemstrs
     local i = 1
-    while i < #itemstrs and i < #contentWindow.placeholders do
+    while i <= #itemstrs and i <= #contentWindow.placeholders do
         local ph = contentWindow.placeholders[i];
         ph.setVisible(true)
         ph.myItemstr= itemstrs[i]
@@ -328,7 +333,7 @@ function contentWindow.fillPlaceholders()
         ph.myDisplayName = itemTable.displayName
         i = i + 1
     end
-    while i < #contentWindow.placeholders do
+    while i <= #contentWindow.placeholders do
         contentWindow.placeholders[i].setVisible(false)
         i = i + 1
     end
