@@ -167,6 +167,7 @@ local function searchInventoryByName(itemName)
         logger.write(", ")
         logger.write(string.upper(itemName))
         logger.write("\n")
+        logger.flush()
         if string.find(string.upper(itemTable.displayName), string.upper(itemName)) then
             table.insert(result, itemstr)
         end
