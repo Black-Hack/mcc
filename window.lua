@@ -106,6 +106,7 @@ local function fetchfromInventory(itemName, itemCount)
     while i <= #chest_names and itemCount > 0 do
         local chest = peripheral.wrap(chest_names[i])
         for slot,_ in pairs(chest.list()) do
+            if itemCount <= 0 then break end
             local currentItemstr = getItemStrFromSlot(chest, slot)
             local itemTable = textutils.unserialise(currentItemstr)
             if itemTable.displayName == itemName then
@@ -117,6 +118,23 @@ local function fetchfromInventory(itemName, itemCount)
         end
         i = i + 1
     end
+end
+local function fetchByItemStr(itemstr, itemCount)
+    local i = 1
+    while i <= #chest_names and itemCount > 0 do
+        local chest = peripheral.wrap(chest_names[i])
+        for slot,_ in pairs(chest.list()) do
+            if itemCount <= 0 then break end
+            local currentItemstr = getItemStrFromSlot(chest, slot)
+            if currentItemstr == itemstr then
+                local pulledCount = bufferChest.pullItems(chest_names[i], slot, itemCount)
+                itemCount = itemCount - pulledCount
+                Inventory[itemstr] = Inventory[itemstr] - pulledCount
+            end
+        end
+        i = i + 1
+    end
+    if Inventory[itemstr] == 0 then Inventory[itemstr] = nil end
 end
 --prints global Inventory
 local function listInventory()
@@ -156,6 +174,16 @@ local function invShell()
     end        
 end
 
+local function searchInventoryByName(itemName)
+    local result = {}
+    for itemstr, count in pairs(Inventory) do
+        local itemTable = textutils.unserialise(itemstr)
+        if string.find(string.upper(itemTable.displayName), string.upper(itemName)) then
+            table.insert(result, itemstr)
+        end
+    end
+    return result
+end
 ---windows.lua 
 
 local screenWidth, screenHeight = term.getSize()
@@ -213,6 +241,8 @@ contentWindow.myHeight = h
 contentWindow.myphWidth = 16
 contentWindow.myphHeight = 3
 contentWindow.placeholders = {}
+contentWindow.myItemstrs = {}
+contentWindow.mySearchText = nil
 local function create_placeholder(posX, posY)
     local placeholder = window.create(contentWindow, posX, posY,
         contentWindow.myphWidth, contentWindow.myphHeight)
@@ -220,7 +250,6 @@ local function create_placeholder(posX, posY)
     placeholder.setBackgroundColor(colors.red)
     placeholder.myItemstr = ""
     placeholder.myDisplayName = "NULL"
-    placeholder.myCount = 0
     local width, height = placeholder.getSize()
     placeholder.myWidth = width
     placeholder.myHeight = height
@@ -235,10 +264,16 @@ local function create_placeholder(posX, posY)
         end
         --draw count
         placeholder.setCursorPos(placeholder.myWidth - 4, placeholder.myHeight)
-        placeholder.write(placeholder.myCount)            
+        placeholder.write(Inventory[placeholder.myItemstr])
     end
     function placeholder.onclick(mouseButton, posX, posY)
-        --todo stuff
+        if not placeholder.isVisible() then return end
+        if mouseButton == 1 then
+            fetchByItemStr(placeholder.myItemstr, 1)
+        elseif mouseButton == 2 then
+            fetchByItemStr(placeholder.myItemstr, 64)
+        end
+        contentWindow.draw()
     end
     return placeholder
 end
@@ -255,15 +290,11 @@ function contentWindow.prevButton.onclick(mouseButton, posX, posY)
     if contentWindow.currentPage > 1 then
         contentWindow.currentPage = contentWindow.currentPage - 1
     end
-    searchWindow.myText = "page " .. tostring(contentWindow.currentPage)
-    searchWindow.draw()
     contentWindow.draw()
 end 
 --nextButton increments currentPage onclick
 function contentWindow.nextButton.onclick(mouseButton, posX, posY)
     contentWindow.currentPage = contentWindow.currentPage + 1
-    searchWindow.myText = "page " .. tostring(contentWindow.currentPage)
-    searchWindow.draw()
     contentWindow.draw()
 end
 --create the placeholders
@@ -273,8 +304,30 @@ for i = 0, 8 do
     local placeholder = create_placeholder(posX, posY)
     table.insert(contentWindow.placeholders, placeholder)
 end
+--fill placeholders with relevent itemstr info 
+function contentWindow.fillPlaceholders()
+    if contentWindow.mySearchText ~= searchWindow.myText then
+        contentWindow.mySearchText = searchWindow.myText
+        contentWindow.myItemstrs = searchInventoryByName(contentWindow.mySearchText);
+    end
+    local itemstrs =  contentWindow.myItemstrs
+    local i = 1
+    while i < #itemstrs and i < #contentWindow.placeholders do
+        local ph = contentWindow.placeholders[i];
+        ph.setVisible(true)
+        ph.myItemstr= itemstrs[i]
+        local itemTable = textutils.unserialise(ph.itemstr)
+        ph.myDisplayName = itemTable.displayName
+        i = i + 1
+    end
+    while i < #contentWindow.placeholders do
+        contentWindow.placeholders[i].setVisible(false)
+        i = i + 1
+    end
 
+end
 function contentWindow.draw()
+    contentWindow.fillPlaceholders()
     contentWindow.clear()
     --draw prev,next Buttons
     contentWindow.prevButton.clear()
