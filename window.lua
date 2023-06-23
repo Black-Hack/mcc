@@ -316,7 +316,7 @@ function contentWindow.fillPlaceholders()
         local ph = contentWindow.placeholders[i];
         ph.setVisible(true)
         ph.myItemstr= itemstrs[i]
-        local itemTable = textutils.unserialise(ph.itemstr)
+        local itemTable = textutils.unserialise(ph.myItemstr)
         ph.myDisplayName = itemTable.displayName
         i = i + 1
     end
@@ -344,8 +344,6 @@ function contentWindow.draw()
 end
 
 function contentWindow.onclick(mouseButton, posX, posY)
-    searchWindow.myText = tostring(posX) .. ", " .. tostring(posY)
-    searchWindow.draw()
     --check if prevButton is clicked
     local x, y = contentWindow.prevButton.getPosition()
     local w, h = contentWindow.prevButton.getSize()
