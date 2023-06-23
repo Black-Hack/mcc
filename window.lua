@@ -119,23 +119,7 @@ local function fetchfromInventory(itemName, itemCount)
         i = i + 1
     end
 end
-local function fetchByItemStr(itemstr, itemCount)
-    local i = 1
-    while i <= #chest_names and itemCount > 0 do
-        local chest = peripheral.wrap(chest_names[i])
-        for slot,_ in pairs(chest.list()) do
-            if itemCount <= 0 then break end
-            local currentItemstr = getItemStrFromSlot(chest, slot)
-            if currentItemstr == itemstr then
-                local pulledCount = bufferChest.pullItems(chest_names[i], slot, itemCount)
-                itemCount = itemCount - pulledCount
-                Inventory[itemstr] = Inventory[itemstr] - pulledCount
-            end
-        end
-        i = i + 1
-    end
-    if Inventory[itemstr] == 0 then Inventory[itemstr] = nil end
-end
+
 --prints global Inventory
 local function listInventory()
     for itemstr, count in pairs(Inventory) do
@@ -190,7 +174,7 @@ local screenWidth, screenHeight = term.getSize()
 local root = term.current()
 local searchWindow = window.create(root,1, 1, screenWidth, 2)
 searchWindow.setBackgroundColor(colors.red)
-searchWindow.myText = "hello"
+searchWindow.myText = ""
 
 --draws myText: the typed so far
 --draws XX : cancel button
@@ -243,6 +227,26 @@ contentWindow.myphHeight = 3
 contentWindow.placeholders = {}
 contentWindow.myItemstrs = {}
 contentWindow.mySearchText = nil
+local function fetchByItemStr(itemstr, itemCount)
+    local i = 1
+    while i <= #chest_names and itemCount > 0 do
+        local chest = peripheral.wrap(chest_names[i])
+        for slot,_ in pairs(chest.list()) do
+            if itemCount <= 0 then break end
+            local currentItemstr = getItemStrFromSlot(chest, slot)
+            if currentItemstr == itemstr then
+                local pulledCount = bufferChest.pullItems(chest_names[i], slot, itemCount)
+                itemCount = itemCount - pulledCount
+                Inventory[itemstr] = Inventory[itemstr] - pulledCount
+            end
+        end
+        i = i + 1
+    end
+    if Inventory[itemstr] == 0 then
+        table.remove(Inventory, itemstr)
+        contentWindow.mySearchText = nil
+    end
+end
 local function create_placeholder(posX, posY)
     local placeholder = window.create(contentWindow, posX, posY,
         contentWindow.myphWidth, contentWindow.myphHeight)
