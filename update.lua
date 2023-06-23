@@ -22,6 +22,6 @@ parallel.waitForAll(
 
     entry('lib/traverse.lua'),
     entry('inventory.lua'),
-    entry('window.lua')
+    entry('invertory_gui.lua')
     
 )
