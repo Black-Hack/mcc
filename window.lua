@@ -316,7 +316,8 @@ for i = 0, 8 do
 end
 --fill placeholders with relevent itemstr info 
 function contentWindow.fillPlaceholders()
-    contentWindow.myItemstrs = searchInventoryByName(contentWindow.mySearchText);
+
+    contentWindow.myItemstrs = searchInventoryByName(searchWindow.myText);
     local itemstrs =  contentWindow.myItemstrs
     local i = 1
     while i < #itemstrs and i < #contentWindow.placeholders do
