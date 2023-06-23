@@ -101,7 +101,7 @@ local function fetchfromInventory(itemName, itemCount)
     if not itemstr then
         print("item was not found")
         return
-    end
+    end 
     local i = 1
     while i <= #chest_names and itemCount > 0 do
         local chest = peripheral.wrap(chest_names[i])
@@ -316,10 +316,7 @@ for i = 0, 8 do
 end
 --fill placeholders with relevent itemstr info 
 function contentWindow.fillPlaceholders()
-    if contentWindow.mySearchText ~= searchWindow.myText then
-        contentWindow.mySearchText = searchWindow.myText
-        contentWindow.myItemstrs = searchInventoryByName(contentWindow.mySearchText);
-    end
+    contentWindow.myItemstrs = searchInventoryByName(contentWindow.mySearchText);
     local itemstrs =  contentWindow.myItemstrs
     local i = 1
     while i < #itemstrs and i < #contentWindow.placeholders do
