@@ -157,7 +157,7 @@ local function invShell()
         end
     end        
 end
-local logger = io.open("log", "w")
+local logger = fs.open("log", "w")
 
 local function searchInventoryByName(itemName)
     local result = {}
