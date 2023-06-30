@@ -106,8 +106,16 @@ function buttonsBar.onclick(mouseButton, posX, posY)
     if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
         buttonsBar.updateButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
     end
+
+    --sort button
+    local x, y = buttonsBar.sortButton.getPosition()
+    local w, h = buttonsBar.sortButton.getSize()
+    if (x <= posX and posX < w + x) and (y <= posY and posY < h + y) then
+            buttonsBar.sortButton.onclick(mouseButton, posX - x + 1, posY - y + 1)
+        end
     contentWindow.items = model.searchItems(topWindow.text)
     contentWindow.fillPlaceholders()
+
 end
 --end buttons bar
 
