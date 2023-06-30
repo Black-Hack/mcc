@@ -18,7 +18,10 @@ end
 
 local view = require( "view")
 local model = require("model")
-local sortchest = require "../lib/sortchest"
+
+package.path = package.path .. ";/" .. shell.resolve("../lib/") .. "/?.lua"
+
+local sortchest = require "sortchest"
 
 model.setBufferChest(bufferChestName)
 
@@ -86,7 +89,7 @@ function buttonsBar.sortButton.onclick(mouseButton, posX, posY)
         
         return false
     end)
-    statusBar.leftText = "sorted"
+    statusBar.leftText = "sorted chests!"
     statusBar.draw()
 end
 function buttonsBar.onclick(mouseButton, posX, posY)

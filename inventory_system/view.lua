@@ -149,7 +149,7 @@ buttonsBar.updateButton = window.create(buttonsBar, 7, 1, 6, 2)
 buttonsBar.updateButton.setBackgroundColor(colors.blue)
 
 --updateButton
-buttonsBar.sortButton = window.create(buttonsBar, 13, 1, 4, 2)
+buttonsBar.sortButton = window.create(buttonsBar, 15, 1, 4, 2)
 buttonsBar.sortButton.setBackgroundColor(colors.blue)
 function buttonsBar.draw()
     buttonsBar.clear()
