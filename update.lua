@@ -1,4 +1,4 @@
-local URL_PREFIX = 'https://raw.githubusercontent.com/bieno/mcc/master/'
+local URL_PREFIX = 'https://raw.githubusercontent.com/bieno12/mcc/master/'
 local DIR_PREFIX = '/mcc/'
 
 local headers = {}
