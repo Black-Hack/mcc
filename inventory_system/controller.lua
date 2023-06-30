@@ -18,7 +18,7 @@ end
 
 local view = require( "view")
 local model = require("model")
-local sortchest = require "..lib.sortchest"
+local sortchest = require "../lib/sortchest"
 
 model.setBufferChest(bufferChestName)
 
