@@ -24,8 +24,6 @@ parallel.waitForAll(
     entry('LICENSE.md'),
 
     entry('lib/traverse.lua'),
-    entry('inventory.lua'),
-    entry('invertory_gui.lua'),
 
     entry('inventory_system/controller.lua'),
     entry('inventory_system/model.lua'),
