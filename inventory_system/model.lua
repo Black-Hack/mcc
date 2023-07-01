@@ -4,6 +4,9 @@ local bufferChest = peripheral.wrap(bufferChestName)
 local chestNames = {}
 local inventory = {}
 
+package.path = package.path .. ";/" .. shell.resolve("../lib/") .. "/?.lua"
+
+local sortchest = require "sortchest"
 
 function model.setBufferChest(name)
     bufferChestName = name
@@ -18,6 +21,11 @@ function model.setBufferChest(name)
             table.insert(chestNames, name)
         end
     end
+    table.sort(chestNames, function (a,b)
+        local anum = tonumber(string.match(a, "%d+"))
+        local bnum = tonumber(string.match(b, "%d+"))
+        return anum < bnum 
+    end)
 end
 
 for _, name in ipairs(peripheral.getNames()) do
@@ -30,6 +38,13 @@ for _, name in ipairs(peripheral.getNames()) do
     end
 end
 
+function model.getStorageChests()
+    local chests = {}
+    for i,name in ipairs(chestNames) do
+        table.insert(chests, peripheral.wrap(name))
+    end
+    return chests
+end
 --get names of connected chests
 
 local function scan_chests()
@@ -126,5 +141,27 @@ function model.getItemCount(item)
     end
     -- local itemstr = textutils.serialise(item)
 	return inventory[item]
+end
+
+function model.sortStorageChests()
+    local chests = model.getStorageChests()
+    
+    sortchest.sort(chests, function(a, b)
+        if a.item.name < b.item.name then return true end
+        if a.item.name > b.item.name then return false end
+        
+        if a.item.count < b.item.count then return false end
+        if a.item.count > b.item.count then return true end
+        
+        local chestA = peripheral.getName(a.chest)
+        local chestB = peripheral.getName(b.chest)
+        if chestA < chestB then return true end
+        if chestA > chestB then return false end
+        
+        if a.slot < b.slot then return true end
+        if a.slot > b.slot then return false end
+        
+        return false
+    end)
 end
 return model
