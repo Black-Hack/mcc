@@ -1,9 +1,12 @@
-local URL_PREFIX = 'https://raw.githubusercontent.com/Black-Hack/mcc/master/'
+local URL_PREFIX = 'https://raw.githubusercontent.com/bieno12/mcc/master/'
 local DIR_PREFIX = '/mcc/'
 
-function entry(name)
+local headers = {}
+headers["cache-control"] = "no-cache"
+headers["pragma"] = "no-cache"
+local function entry(name)
     return function()
-        response = http.get(URL_PREFIX .. name, nil, true)
+        local response = http.get(URL_PREFIX .. name, headers, true)
         local file = fs.open(DIR_PREFIX .. name, 'wb')
         file.write(response.readAll())
         file.close()
@@ -22,7 +25,8 @@ parallel.waitForAll(
     entry('LICENSE.md'),
 
     entry('lib/traverse.lua'),
-    entry('inventory.lua'),
-    entry('invertory_gui.lua')
-    
+
+    entry('inventory_system/controller.lua'),
+    entry('inventory_system/model.lua'),
+    entry('inventory_system/view.lua')
 )
