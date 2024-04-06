@@ -20,6 +20,7 @@ fs.makeDir(DIR_PREFIX .. 'lib/')
 parallel.waitForAll(
     entry('update.lua'),
     entry('sortchest.lua'),
+    entry('excavate.lua'),
     entry('lib/sortchest.lua'),
     entry('LICENSE.md'),
 
