@@ -28,5 +28,14 @@ parallel.waitForAll(
 
     entry('inventory_system/controller.lua'),
     entry('inventory_system/model.lua'),
-    entry('inventory_system/view.lua')
+    entry('inventory_system/view.lua'),
+
+    entry('lib/advanced_inventory/init.lua'),
+
+    entry('lib/itp/itpserver.lua'),
+    entry('lib/itp/itpclient.lua'),
+
+    entry('gitblob/client.lua'),
+    entry('gitblob/server.lua'),
+    entry('gitblob/gitblob.lua')
 )
