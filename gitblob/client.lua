@@ -9,7 +9,8 @@ function M.syncDirectory(baseDirectory)
 	if not fs.isDir(baseDirectory) then
 		fs.makeDir(baseDirectory)
 	end
-	M.baseDirectory = fs.combine(baseDirectory, '.')
+	M.baseDirectory = shell.resolve(baseDirectory)
+	print(M.baseDirectory)
 	--send ftp request to gitblob server
 	local requestData = {
 		type = "update"
