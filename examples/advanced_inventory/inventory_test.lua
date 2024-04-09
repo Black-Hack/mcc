@@ -1,4 +1,4 @@
-local advanced_inventory = require "/mcc.advanced_inventory"
+local advanced_inventory = require "/mcc.lib.advanced_inventory"
 
 local chest1 = advanced_inventory.wrap(peripheral.wrap(arg[1]))
 local chest2 = advanced_inventory.wrap(peripheral.wrap(arg[2]))

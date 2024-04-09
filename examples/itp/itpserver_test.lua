@@ -1,6 +1,6 @@
 -- Import the server module
 local server = require("itpserver")
-local advanced_inventory = require "/mcc.advanced_inventory"
+local advanced_inventory = require "/mcc.lib.advanced_inventory"
 rednet.open("back")
 
 local storage = advanced_inventory.wrap(peripheral.wrap(arg[1]))
