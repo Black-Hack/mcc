@@ -1,4 +1,4 @@
-local client = require("itpclient")
+local client = require("/mcc.lib.itp.itpclient")
 rednet.open("back")
 local depositInventory = arg[1]
 -- Define a function to handle the response from the server
