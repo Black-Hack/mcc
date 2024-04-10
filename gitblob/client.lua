@@ -6,10 +6,10 @@ function M.setServer(serverId)
 end
 
 function M.syncDirectory(baseDirectory)
+	M.baseDirectory = shell.resolve(baseDirectory)
 	if not fs.isDir(baseDirectory) then
 		fs.makeDir(baseDirectory)
 	end
-	M.baseDirectory = shell.resolve(baseDirectory)
 	print(M.baseDirectory)
 	--send ftp request to gitblob server
 	local requestData = {

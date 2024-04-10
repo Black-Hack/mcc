@@ -23,7 +23,7 @@ if cmd == "lookup" then
 end
 
 if cmd == "sync" then
-	if #arg ~= 2 then
+	if #arg < 2 then
 		print("sync server_id [directory]")
 		return
 	end
