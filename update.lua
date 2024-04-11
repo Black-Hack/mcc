@@ -42,6 +42,7 @@ parallel.waitForAll(
     entry('examples/advanced_inventory/inventory_test.lua'),
     entry('examples/advanced_inventory/inventory_test.lua'),
     entry('examples/itp/itpclient_test.lua'),
-    entry('examples/itp/itpserver_test.lua')
+    entry('examples/itp/itpserver_test.lua'),
 
+    entry('lava_farmer/lava_farmer.lua')
 )
