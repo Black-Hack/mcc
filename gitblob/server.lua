@@ -7,7 +7,7 @@ function M.startServer(hostname)
 
 end
 function M.watchDirectory(directory)
-	M.baseDir = fs.combine(directory, '.')
+	M.baseDir = shell.resolve(directory)
     print("watching ".. M.baseDir .. " ")
 	for _, filename in pairs(M.listAllFiles(M.baseDir)) do
 		print("file: " .. M.removePrefix(filename, M.baseDir.."/"))
