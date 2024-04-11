@@ -7,6 +7,6 @@ chest1.pushItemByName("minecraft:gold_ingot", 10, chest2)
 ```
 or
 ```lua
-chest2.pullitemByName("minecraft:gold_ingot", 10, chest1)
+chest2.pullItemByName("minecraft:gold_ingot", 10, chest1)
 ```
 check the code for the full api
