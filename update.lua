@@ -19,5 +19,31 @@ fs.makeDir(DIR_PREFIX .. 'lib/')
 
 print(URL_PREFIX)
 parallel.waitForAll(
-    entry('excavate.lua')
+    entry('update.lua'),
+    entry('sortchest.lua'),
+    entry('excavate.lua'),
+    entry('lib/sortchest.lua'),
+    entry('LICENSE.md'),
+
+    entry('lib/traverse.lua'),
+
+    entry('inventory_system/controller.lua'),
+    entry('inventory_system/model.lua'),
+    entry('inventory_system/view.lua'),
+
+    entry('lib/advanced_inventory/init.lua'),
+
+    entry('lib/itp/itpserver.lua'),
+    entry('lib/itp/itpclient.lua'),
+
+    entry('gitblob/client.lua'),
+    entry('gitblob/server.lua'),
+    entry('gitblob/gitblob.lua'),
+
+    entry('examples/advanced_inventory/inventory_test.lua'),
+    entry('examples/advanced_inventory/inventory_test.lua'),
+    entry('examples/itp/itpclient_test.lua'),
+    entry('examples/itp/itpserver_test.lua'),
+
+    entry('lava_farmer/lava_farmer.lua')
 )
