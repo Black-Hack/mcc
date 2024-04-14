@@ -1,0 +1,11 @@
+name = mcc
+  type = github
+    author = bieno12
+    repository = mcc
+    branch = master
+  category = lib
+  dependencies = none
+  target = /mcc
+  version = 1.0
+  size = 42
+end
