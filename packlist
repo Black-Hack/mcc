@@ -6,6 +6,6 @@ name = mcc
   category = lib
   dependencies = none
   target = /mcc
-  version = 1.0
+  version = 1.1
   size = 42
 end
