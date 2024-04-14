@@ -35,6 +35,8 @@ parallel.waitForAll(
 
     entry('lib/itp/itpserver.lua'),
     entry('lib/itp/itpclient.lua'),
+    
+    entry('lib/compress/deflatelua.lua'),
 
     entry('gitblob/client.lua'),
     entry('gitblob/server.lua'),
