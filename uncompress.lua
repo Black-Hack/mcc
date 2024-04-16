@@ -33,8 +33,12 @@ end
 
 -- Main function
 local function main()
-    local inputFilename = 'foo.txt.gz' -- Adjust as needed
-    local outputFilename = 'foo.txt' -- Adjust as needed
+    if #arg ~= 2 then
+        print("gzip <input> <output>")
+        return
+    end
+    local inputFilename = arg[1]
+    local outputFilename = arg[2] -- Adjust as needed
 
     local success, err = pcall(uncompressGzip, inputFilename, outputFilename)
     if not success then
