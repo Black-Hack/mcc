@@ -2,7 +2,7 @@
 
 local nbt2table = {}  -- Define a table to hold our module functions
 local m = {}
-DO_LOG = true
+DEBUG = false
 TAG_END = 0
 TAG_BYTE = 1
 TAG_SHORT = 2
@@ -19,7 +19,7 @@ TAG_LONG_ARRAY = 12
 
 local logger
 local function log(message)
-	if DO_LOG then
+	if DEBUG then
 		if logger == nil then
 			logger = assert(io.open(shell.resolve "log", "w+"))
 		end
