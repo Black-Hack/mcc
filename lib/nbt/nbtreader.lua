@@ -21,13 +21,16 @@ local logger
 local function log(message)
 	if DEBUG then
 		if logger == nil then
-			logger = assert(io.open(shell.resolve "log", "w+"))
+			if fs.exists(shell.resolve "log") then
+				logger = assert(io.open(shell.resolve "log", "a"))
+			else
+				logger = assert(io.open(shell.resolve "log", "w+"))
+			end
 		end
 		logger:write(message .."\n")
 		logger:flush()
 	end
 end
-
 function m.parseEnd(buffer, context)
 	log("parsing end")
 	return nil
@@ -91,7 +94,7 @@ function m.parseList(buffer, context)
         table.insert(list, tagTable[innerTagType](buffer, TAG_LIST))  -- Recursively parse inner tags
     end
     log("parsing List "..textutils.serialise(list))
-    return {tagType = TAG_LIST, name = nil, content = list}
+    return {tagType = TAG_LIST, name = nil, content = list, innerTagType = innerTagType}
 end
 
 function m.parseCompound(buffer, context)

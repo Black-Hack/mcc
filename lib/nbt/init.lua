@@ -3,6 +3,8 @@
 local deflate = require "/mcc/lib/compress/deflatelua" -- Gzip decompress library
 local modulePath = debug.getinfo(1, "S").source:sub(2)
 local nbtreader = require (modulePath:gsub("[^/]+$", "") .. "nbtreader")
+local nbtwriter = require (modulePath:gsub("[^/]+$", "") .. "nbtwriter")
+
 local nbt = {}                                      -- Define a table to hold our module functions and data
 
 
@@ -44,16 +46,16 @@ function nbt.read(filename)
 end
 
 -- Function to write a Lua table to an NBT file
-function nbt.write(filename, data)
-	-- Implement the logic here to convert the Lua table to NBT format and write it to a file
-	-- You'll need to serialize the Lua table into NBT format
-
-	-- Example pseudocode:
-	-- 1. Open the file for writing
-	-- 2. Convert the Lua table to NBT format
-	-- 3. Write the NBT data to the file
-	-- 4. Close the file
+function nbt.write(filename, tag)
+    -- Open the file for writing
+    local file = io.open(shell.resolve(filename), "wb")
+    if not file then
+        error("Failed to open file for writing: " .. filename)
+    end
+    nbtwriter.write(tag, file)
+    file:close()
 end
+
 
 function nbt.nbt2table(tag)
     
