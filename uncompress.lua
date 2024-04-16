@@ -10,19 +10,19 @@ end
 
 -- Function to uncompress gzip file
 local function uncompressGzip(inputFilename, outputFilename)
-    local fh, err = fs.open(shell.resolve(inputFilename), 'rb')
+    local fh, err = io.open(shell.resolve(inputFilename), 'rb')
     if not fh then
         handleError(err)
     end
     
-    local ofh, err = fs.open(shell.resolve(outputFilename), 'wb')
+    local ofh, err = io.open(shell.resolve(outputFilename), 'wb')
     if not ofh then
         handleError(err)
     end
     
     local success, err = DEFLATE.gunzip {input=fh, output=ofh, disable_crc = true}
-    fh.close()
-    ofh.close()
+    fh:close()
+    ofh:close()
     
     if not success then
         handleError(err)
