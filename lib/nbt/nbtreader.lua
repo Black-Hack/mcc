@@ -1,8 +1,8 @@
 -- nbt2table.lua
 
-local nbt2table = {}  -- Define a table to hold our module functions
+local nbtReader = {}  -- Define a table to hold our module functions
 local m = {}
-DEBUG = false
+DEBUG = true
 TAG_END = 0
 TAG_BYTE = 1
 TAG_SHORT = 2
@@ -35,121 +35,110 @@ end
 
 function m.parseByte(buffer, context)
 	log("parsing byte")
-	return string.unpack(">b", buffer:read(1))
+	return {tagType = TAG_BYTE, name = nil, content = string.unpack(">b", buffer:read(1))}
 end
 
 function m.parseShort(buffer, context)
-	local s = string.unpack(">h", buffer:read(2))
-	log("parsing short ".. s)
-	return s
+    local value = string.unpack(">h", buffer:read(2))
+    log("parsing short ".. value)
+    return {tagType = TAG_SHORT, name = nil, content = value}
 end
 
 function m.parseInt(buffer, context)
-	local v = string.unpack(">i", buffer:read(4))
-	log("parsing int ".. v)
-	return v
+    local value = string.unpack(">i", buffer:read(4))
+    log("parsing int ".. value)
+    return {tagType = TAG_INT, name = nil, content = value}
 end
-function m.parseLong(buffer, context)
-	local l = string.unpack(">l", buffer:read(8))
-	log("parsing long ".. l)
-	return l
-end
-function m.parseFloat(buffer, context)
-	local f = string.unpack(">f", buffer:read(4))
-	log("parsing float ".. f)
-	return f
-end
-function m.parseDouble(buffer, context)
-	local f = string.unpack(">d", buffer:read(8))
-	log("parsed Double ".. f)
 
-	return f
+function m.parseLong(buffer, context)
+    local value = string.unpack(">l", buffer:read(8))
+    log("parsing long ".. value)
+    return {tagType = TAG_LONG, name = nil, content = value}
+end
+
+function m.parseFloat(buffer, context)
+    local value = string.unpack(">f", buffer:read(4))
+    log("parsing float ".. value)
+    return {tagType = TAG_FLOAT, name = nil, content = value}
+end
+
+function m.parseDouble(buffer, context)
+    local value = string.unpack(">d", buffer:read(8))
+    log("parsed Double ".. value)
+    return {tagType = TAG_DOUBLE, name = nil, content = value}
 end
 
 function m.parseByteArray(buffer, context)
-	local length = string.unpack(">i", buffer:read(4))
-	local buf = buffer:read(length)
-	log("parsing ByteArray \""..buf.."\"")
-
-	return buf
+    local length = string.unpack(">i", buffer:read(4))
+    local content = buffer:read(length)
+    log("parsing ByteArray \""..content.."\"")
+    return {tagType = TAG_BYTE_ARRAY, name = nil, content = content}
 end
+
 function m.parseString(buffer, context)
-	local length = string.unpack(">H", buffer:read(2))
-	
-	log("length : ".. length)
-	local str = buffer:read(length)
-	log("parsing String \""..str.."\"")
-	return str
+    local length = string.unpack(">H", buffer:read(2))
+    log("length : ".. length)
+    local value = buffer:read(length)
+    log("parsing String \""..value.."\"")
+    return {tagType = TAG_STRING, name = nil, content = value}
 end
 
 function m.parseList(buffer, context)
-	local innerTagType = string.byte(buffer:read(1))
-
-	local length = string.unpack(">i", buffer:read(4))
-	local list = {}
-	for i = 1, length do
-		table.insert(list, (tagTable[innerTagType](buffer, TAG_LIST)))  -- Recursively parse inner tags
-	end
-	log("parsing List "..textutils.serialise(list))
-
-	return list
+    local innerTagType = string.byte(buffer:read(1))
+    local length = string.unpack(">i", buffer:read(4))
+    local list = {}
+    for i = 1, length do
+        table.insert(list, tagTable[innerTagType](buffer, TAG_LIST))  -- Recursively parse inner tags
+    end
+    log("parsing List "..textutils.serialise(list))
+    return {tagType = TAG_LIST, name = nil, content = list}
 end
 
 function m.parseCompound(buffer, context)
-	local name
-	if context ~= TAG_LIST then
-		name = m.parseString(buffer)
-	end
-	local compound = {}
-	-- parse name of compound
-	while true do
-		local tagType = string.byte(buffer:read(1))
-		log("type = ".. tagType)
-		if tagType == TAG_END then
-			break
-		end
+    local name
+    if context ~= TAG_LIST then
+        name = m.parseString(buffer).content
+    end
+    local compound = {}
+    -- parse name of compound
+    while true do
+        local tagType = string.byte(buffer:read(1))
+        log("type = ".. tagType)
+        if tagType == TAG_END then
+            break
+        end
 
-		if tagTable[tagType] == nil then
-			error("Unrecognised tag type ".. tagType)
-		end
-
-		local name = m.parseString(buffer)  -- Read tag name
-		local tag = tagTable[tagType](buffer, context) -- Recursively parse inner tags
-		compound[name] = tag
-	end
-	local c
-	if context ~= TAG_LIST then
-		c = {[name] = compound}
-	else
-		c = compound
-	end
-	log("parsing Compound ".. textutils.serialise(c))
-	
-	return c
+        if tagTable[tagType] == nil then
+            error("Unrecognised tag type ".. tagType)
+        end
+        local name = m.parseString(buffer).content  -- Read tag name
+        local tag = tagTable[tagType](buffer, context) -- Recursively parse inner tags
+		tag.name = name
+        compound[name] = tag
+    end
+    log("parsing Compound ".. textutils.serialise(compound))
+    return {tagType = TAG_COMPOUND, name = name, content = compound}
 end
+
 function m.parseIntList(buffer, context)
-	log("parsing IntList")
-	local length = string.unpack(">i", buffer:read(4))
-            
-	local array = {}
-	for i = 1, length do
-		table.insert(array, (string.unpack(">i", buffer:read(4))))
-	end
-	
-	return array
+    log("parsing IntList")
+    local length = string.unpack(">i", buffer:read(4))
+    local array = {}
+    for i = 1, length do
+        table.insert(array, string.unpack(">i", buffer:read(4)))
+    end
+    return {tagType = TAG_INT_ARRAY, name = nil, content = array}
 end
+
 function m.parseLongList(buffer, context)
-	log("parsing LongList")
-
-	local length = string.unpack(">i", buffer:read(4))
-            
-	local array = {}
-	for i = 1, length do
-		table.insert(array, (string.unpack(">i", buffer:read(4))))
-	end
-	return array
+    log("parsing LongList")
+    local length = string.unpack(">i", buffer:read(4))
+    local array = {}
+    for i = 1, length do
+        table.insert(array, string.unpack(">l", buffer:read(8)))
+    end
+    return {tagType = TAG_LONG_ARRAY, name = nil, content = array}
 end
-
 function m.parseNBT(buffer, context)
 	local tagType = buffer:read(1)  -- Read tag type byte
 	
@@ -170,7 +159,7 @@ function m.parseNBT(buffer, context)
 end
 
 -- Function to read an NBT file and convert it to a Lua table
-function nbt2table.read(buffer)
+function nbtReader.read(buffer)
     if io.type(buffer) ~= "file" then
         error("expected a valid file")
     end
@@ -181,6 +170,24 @@ function nbt2table.read(buffer)
     return result  -- Return the parsed Lua table
 end
 
+function nbtReader.nbt2table(tag)
+    
+    if tag.type == TAG_COMPOUND then
+        local c = {}
+        for name, innerTag in pairs(tag.content) do
+            c[name] = nbtReader.nbt2table(innerTag)
+        end
+        return c
+    elseif tag.type == TAG_LIST then
+        local l = {}
+        for innerTag in pairs(tag.content) do
+            table.insert(l, (nbtReader.nbt2table(innerTag)))
+        end
+        return l
+    else
+       return tag.content
+    end
+end
 tagTable = {
 	[TAG_END] = m.parseByte,
 	[TAG_BYTE] = m.parseByte,
@@ -197,4 +204,4 @@ tagTable = {
 	[TAG_LONG_ARRAY] = m.parseLongList,
 }
 
-return nbt2table
+return nbtReader
