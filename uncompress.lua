@@ -20,7 +20,7 @@ local function uncompressGzip(inputFilename, outputFilename)
         handleError(err)
     end
     
-    local success, err = DEFLATE.gunzip {input=fh, output=ofh, disable_crc = true}
+    local success, err = DEFLATE.gunzip {input=fh, output=ofh}
     fh:close()
     ofh:close()
     
