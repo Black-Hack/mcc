@@ -2,7 +2,7 @@
 
 local nbtReader = {}  -- Define a table to hold our module functions
 local m = {}
-DEBUG = true
+DEBUG = false
 TAG_END = 0
 TAG_BYTE = 1
 TAG_SHORT = 2

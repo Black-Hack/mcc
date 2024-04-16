@@ -16,6 +16,7 @@ TAG_COMPOUND = 10
 TAG_INT_ARRAY = 11
 TAG_LONG_ARRAY = 12
 
+DEBUG = false
 local logger
 local function log(message)
 	if DEBUG then
@@ -31,59 +32,73 @@ local function log(message)
 	end
 end
 
-function nbtwriter.write(tag, filehandler)
+function m.writeName(name, filehandler)
+    filehandler:write(string.pack(">H", #name))
+    filehandler:write(name)
+end
+function nbtwriter.write(tag, filehandler, context)
     -- Write the tag type byte
-    filehandler:write(string.char(tag.tagType))
-    
+    if context ~= TAG_LIST then
+        log("Writing tag type: " .. tag.tagType)
+        filehandler:write(string.pack(">b", tag.tagType))
+    end
+    if tag.name ~= nil then
+        log("Writing tag name: " .. tag.name)
+        m.writeName(tag.name, filehandler)
+    end
     -- Write tag content based on tag type
     if tag.tagType == TAG_END then
         -- Nothing to write for TAG_END
     elseif tag.tagType == TAG_BYTE then
+        log("Writing byte: " .. tag.content)
         filehandler:write(string.pack(">b", tag.content))
     elseif tag.tagType == TAG_SHORT then
-        filehandler:write(string.pack(">H", tag.content))
+        log("Writing short: " .. tag.content)
+        filehandler:write(string.pack(">h", tag.content))
     elseif tag.tagType == TAG_INT then
+        log("Writing int: " .. tag.content)
         filehandler:write(string.pack(">i", tag.content))
     elseif tag.tagType == TAG_LONG then
+        log("Writing long: " .. tag.content)
         filehandler:write(string.pack(">l", tag.content))
     elseif tag.tagType == TAG_FLOAT then
+        log("Writing float: " .. tag.content)
         filehandler:write(string.pack(">f", tag.content))
     elseif tag.tagType == TAG_DOUBLE then
+        log("Writing double: " .. tag.content)
         filehandler:write(string.pack(">d", tag.content))
     elseif tag.tagType == TAG_BYTE_ARRAY then
+        log("Writing byte array length: " .. #tag.content)
         -- Write the length of the byte array as a 4-byte integer
         filehandler:write(string.pack(">i", #tag.content))
         -- Write the byte array itself
         filehandler:write(tag.content)
     elseif tag.tagType == TAG_STRING then
+        log("Writing string: " .. tag.content)
         -- Write the length of the string as a 2-byte integer
         filehandler:write(string.pack(">H", #tag.content))
         -- Write the string itself
         filehandler:write(tag.content)
     elseif tag.tagType == TAG_LIST then
         -- Write the list type byte
+        log("Writing list type: " .. tag.innerTagType)
         filehandler:write(string.char(tag.innerTagType))
         -- Write the length of the list as a 4-byte integer
+        log("Writing list length: " .. #tag.content)
         filehandler:write(string.pack(">i", #tag.content))
         -- Write each element of the list recursively
         for _, element in ipairs(tag.content) do
-            nbtwriter.write(element, filehandler)
+            nbtwriter.write(element, filehandler, TAG_LIST)
         end
     elseif tag.tagType == TAG_COMPOUND then
-        -- Write each compound element recursively
-		if tag.name ~= nil then
-			nbtwriter.write({tagType = TAG_STRING, content = tag.name}, filehandler)
-		end
         for name, subtag in pairs(tag.content) do
-            -- Write subtag name
-            nbtwriter.write({tagType = TAG_STRING, content = name}, filehandler)
-            -- Write subtag itself
-            nbtwriter.write(subtag, filehandler)
+            nbtwriter.write(subtag, filehandler, TAG_COMPOUND)
         end
-        -- Write TAG_END to indicate end of compound
+        log("write end tag")
         filehandler:write(string.char(TAG_END))
     elseif tag.tagType == TAG_INT_ARRAY then
         -- Write the length of the int array as a 4-byte integer
+        log("Writing int array length: " .. #tag.content)
         filehandler:write(string.pack(">i", #tag.content))
         -- Write each integer of the array
         for _, value in ipairs(tag.content) do
@@ -91,6 +106,7 @@ function nbtwriter.write(tag, filehandler)
         end
     elseif tag.tagType == TAG_LONG_ARRAY then
         -- Write the length of the long array as a 4-byte integer
+        log("Writing long array length: " .. #tag.content)
         filehandler:write(string.pack(">i", #tag.content))
         -- Write each long integer of the array
         for _, value in ipairs(tag.content) do

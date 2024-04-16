@@ -5,7 +5,7 @@ local modulePath = debug.getinfo(1, "S").source:sub(2)
 local nbtreader = require (modulePath:gsub("[^/]+$", "") .. "nbtreader")
 local nbtwriter = require (modulePath:gsub("[^/]+$", "") .. "nbtwriter")
 
-DEBUG = true
+DEBUG = false
 
 local nbt = {}
 local logger
