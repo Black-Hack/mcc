@@ -230,7 +230,7 @@ local is_bitstream = setmetatable({}, {__mode='k'})
 local function bytestream_from_file(fh)
   local o = {}
   function o:read()
-    local sb = fh.read(1)
+    local sb = fh:read(1)
     if sb then return sb:byte() end
   end
   return o
@@ -341,7 +341,7 @@ end
 local function get_obytestream(o)
   local bs
   if type(o) == 'table' then
-    bs = function(sbyte) o.write(string_char(sbyte)) end
+    bs = function(sbyte) o:write(string_char(sbyte)) end
   elseif type(o) == 'function' then
     bs = o
   else
