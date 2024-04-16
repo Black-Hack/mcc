@@ -1,6 +1,6 @@
 local packageInfo = {
     type = "github",
-    author = "Black-Hack",
+    author = "bieno12",
     branch = "master",
     repository = "mcc",
     src = "/",
