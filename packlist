@@ -1,6 +1,6 @@
 name = mcc
   type = github
-    author = bieno12
+    author = Black-Hack
     repository = mcc
     branch = master
   category = lib
