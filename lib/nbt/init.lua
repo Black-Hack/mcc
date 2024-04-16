@@ -2,7 +2,7 @@
 
 local deflate = require "/mcc/lib/compress/deflatelua" -- Gzip decompress library
 local modulePath = debug.getinfo(1, "S").source:sub(2)
-local nbt2table = require (modulePath:gsub("[^/]+$", "") .. "nbt2table")
+local nbt2table = require (modulePath:gsub("[^/]+$", "") .. "nbtreader")
 local nbt = {}                                      -- Define a table to hold our module functions and data
 
 
