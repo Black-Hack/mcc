@@ -196,4 +196,5 @@ tagTable = {
 	[TAG_INT_ARRAY] = m.parseIntList,
 	[TAG_LONG_ARRAY] = m.parseLongList,
 }
-return nbt2table  -- Return the module table
+
+return nbt2table
