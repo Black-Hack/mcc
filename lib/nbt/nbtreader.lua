@@ -170,24 +170,7 @@ function nbtReader.read(buffer)
     return result  -- Return the parsed Lua table
 end
 
-function nbtReader.nbt2table(tag)
-    
-    if tag.type == TAG_COMPOUND then
-        local c = {}
-        for name, innerTag in pairs(tag.content) do
-            c[name] = nbtReader.nbt2table(innerTag)
-        end
-        return c
-    elseif tag.type == TAG_LIST then
-        local l = {}
-        for innerTag in pairs(tag.content) do
-            table.insert(l, (nbtReader.nbt2table(innerTag)))
-        end
-        return l
-    else
-       return tag.content
-    end
-end
+
 tagTable = {
 	[TAG_END] = m.parseByte,
 	[TAG_BYTE] = m.parseByte,

@@ -2,7 +2,7 @@
 
 local deflate = require "/mcc/lib/compress/deflatelua" -- Gzip decompress library
 local modulePath = debug.getinfo(1, "S").source:sub(2)
-local nbt2table = require (modulePath:gsub("[^/]+$", "") .. "nbtreader")
+local nbtreader = require (modulePath:gsub("[^/]+$", "") .. "nbtreader")
 local nbt = {}                                      -- Define a table to hold our module functions and data
 
 
@@ -33,7 +33,7 @@ function nbt.read(filename)
 		file, err = assert(io.open(tempfilename, "r+b"))
 	end
 	-- Call nbt2table.read to parse the NBT data into a Lua table
-	local parsedData = nbt2table.read(file)
+	local parsedData = nbtreader.read(file)
 	file:close()
 
 	if isCompressed then
@@ -55,4 +55,22 @@ function nbt.write(filename, data)
 	-- 4. Close the file
 end
 
+function nbt.nbt2table(tag)
+    
+    if tag.type == TAG_COMPOUND then
+        local c = {}
+        for name, innerTag in pairs(tag.content) do
+            c[name] = nbt.nbt2table(innerTag)
+        end
+        return c
+    elseif tag.type == TAG_LIST then
+        local l = {}
+        for innerTag in pairs(tag.content) do
+            table.insert(l, (nbt.nbt2table(innerTag)))
+        end
+        return l
+    else
+       return tag.content
+    end
+end
 return nbt -- Return the module table
